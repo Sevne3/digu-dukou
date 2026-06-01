@@ -1,4 +1,5 @@
-﻿import "./globals.css";
+import "./globals.css";
+import { Analytics } from "@vercel/analytics/next";
 import ThemeErrorBoundary from "@/components/ThemeErrorBoundary"
 import ThemeProvider from "@/components/ThemeProvider";
 import ClientLayout from "@/components/ClientLayout";
@@ -19,6 +20,7 @@ export default function RootLayout({ children }) {
         <ThemeErrorBoundary><ThemeProvider><ClientLayout>
           <div className="page-wrap">{children}</div>
         </ClientLayout></ThemeProvider></ThemeErrorBoundary>
+        <Analytics />
       </body>
     </html>
   );
