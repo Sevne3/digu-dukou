@@ -6,7 +6,7 @@ export async function POST(req) {
   const payload = await verifyToken(auth?.replace("Bearer ", ""));
   if (!payload) return Response.json({ error: "请先登录" }, { status: 401 });
 
-  const { title, content, category, isAnonymous } = await req.json();
+  const { title, content, category, isAnonymous, images } = await req.json();
   // Sanitize user input
   const sanitize = s => typeof s === "string" ? s.replace(/[<>]/g, "").substring(0, 5000) : s;
   const safeContent = sanitize(content);
