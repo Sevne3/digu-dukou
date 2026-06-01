@@ -17,6 +17,8 @@ export default function CommunityPage() {
   const [content, setContent] = useState("");
   const [category, setCategory] = useState("心情");
   const [anonymous, setAnonymous] = useState(false);
+  const [images, setImages] = useState([]);
+  const [previewImgs, setPreviewImgs] = useState([]);
   const [submitting, setSubmitting] = useState(false);
   const [filter, setFilter] = useState("all");
   const [comments, setComments] = useState({});
@@ -63,10 +65,30 @@ export default function CommunityPage() {
     } catch {}
   };
 
+  const handleImageUpload = (e) => {
+    const files = Array.from(e.target.files || []);
+    if (files.length + images.length > 3) { alert("最多上传3张图片"); return; }
+    files.forEach(file => {
+      if (file.size > 1024 * 1024) { alert("单张图片不能超过1MB"); return; }
+      const reader = new FileReader();
+      reader.onload = (ev) => {
+        setImages(prev => [...prev, ev.target.result]);
+        setPreviewImgs(prev => [...prev, URL.createObjectURL(file)]);
+      };
+      reader.readAsDataURL(file);
+    });
+    e.target.value = "";
+  };
+
+  const removeImage = (idx) => {
+    setImages(prev => prev.filter((_, i) => i !== idx));
+    setPreviewImgs(prev => prev.filter((_, i) => i !== idx));
+  };
+
   const handlePost = async (e) => {
     e.preventDefault(); if (!content.trim()) return;
     setSubmitting(true);
-    try { await createPost({ title: title.trim(), content: content.trim(), category, isAnonymous: anonymous }); setTitle(""); setContent(""); setShowForm(false); loadPosts(); } catch { alert("发布失败"); }
+    try { await createPost({ title: title.trim(), content: content.trim(), category, isAnonymous: anonymous, images }); setTitle(""); setContent(""); setShowForm(false); setImages([]); setPreviewImgs([]); loadPosts(); } catch { alert("发布失败"); }
     setSubmitting(false);
   };
 
@@ -108,7 +130,7 @@ export default function CommunityPage() {
           <div className="card" style={{marginBottom:"24px"}}>
             <form onSubmit={handlePost} style={{display:"flex",flexDirection:"column",gap:"12px"}}>
               <input className="input" placeholder="标题（选填）" value={title} onChange={e=>setTitle(e.target.value)} />
-              <textarea className="input" style={{minHeight:"120px",resize:"vertical",fontFamily:"inherit",lineHeight:"1.9"}} placeholder="写写你的心情、想法、或者想分享的信息…" value={content} onChange={e=>setContent(e.target.value)} required />
+              <div>{previewImgs.length > 0 && <div style={{display:"flex",gap:"8px",flexWrap:"wrap",marginBottom:"10px"}}>{previewImgs.map((url,i)=> <div key={i} style={{position:"relative",width:"80px",height:"80px",borderRadius:"8px",overflow:"hidden",border:"1px solid #eee",flexShrink:0}}><img src={url} style={{width:"100%",height:"100%",objectFit:"cover"}} /><button onClick={()=>removeImage(i)} style={{position:"absolute",top:"2px",right:"2px",width:"20px",height:"20px",borderRadius:"50%",border:"none",background:"rgba(0,0,0,.5)",color:"#fff",fontSize:"12px",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",padding:0}}>x</button></div>)}</div>}</div>}<textarea className="input" style={{minHeight:"120px",resize:"vertical",fontFamily:"inherit",lineHeight:"1.9"}} placeholder="写写你的心情、想法、或者想分享的信息…" value={content} onChange={e=>setContent(e.target.value)} required />
               <div style={{display:"flex",gap:"12px",flexWrap:"wrap",alignItems:"center"}}>
                 <select className="input" style={{width:"auto",minWidth:"120px",padding:"10px 14px"}} value={category} onChange={e=>setCategory(e.target.value)}>
                   <option value="心情">💭 心情</option><option value="工作互助">💼 工作互助</option>
@@ -136,7 +158,7 @@ export default function CommunityPage() {
                   <span className="badge badge--ghost">{catLabels[p.category]||p.category} {p.category}</span>
                 </div>
                 {p.title && <div className="pc-t">{p.title}</div>}
-                <div className="pc-c">{p.content}</div>
+                <div className="pc-c">{p.content}</div>{p.images && p.images.length > 0 && <div style={{display:"flex",gap:"8px",flexWrap:"wrap",marginTop:"12px"}}>{p.images.map((img,i) => <img key={i} src={img} style={{maxWidth:"100%",maxHeight:"300px",borderRadius:"12px",objectFit:"contain",cursor:"pointer"}} onClick={()=>window.open(img,"_blank")} onError={e=>e.target.style.display="none"} />)}</div>}
                 <div className="pc-f">
                   {Object.entries(reactionTypes).map(([key, rt]) => {
                     const reacted = reactions[p.id]?.userReactions?.[key];
