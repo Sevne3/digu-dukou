@@ -8,6 +8,13 @@ let volume = 0.3;
 
 const PLAYLIST = [
   {
+    id: "bornastranger",
+    name: "Born a Stranger",
+    emoji: "🌙",
+    description: "Kan R. Gao — To the Moon",
+    url: "/api/audio?id=1645108"
+  },
+  {
     id: "snowfall",
     name: "snowfall (Sped Up)",
     emoji: "❄️",
