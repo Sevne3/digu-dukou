@@ -20,7 +20,9 @@ export default function LoginPage() {
       const fn = isSignUp ? register : login;
       const data = await fn(email, password);
       localStorage.setItem("token", data.token);
-      if (isSignUp) alert("🎉 注册成功！欢迎来到低谷渡口");
+      if (isSignUp) {
+        alert("🎉 注册成功！\n\n一封验证邮件已发送到你的邮箱。\n请查收并点击链接完成验证。");
+      }
       router.push("/dashboard");
     } catch (err) {
       setError(err.message);

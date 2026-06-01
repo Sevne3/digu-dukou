@@ -44,3 +44,13 @@ export function sendMessage(toUserId, content) { return api("/api/messages", { m
 
 export function getNotifications() { return api("/api/notifications"); }
 export function markNotifRead(notificationId) { return api("/api/notifications", { method: "POST", body: JSON.stringify({ action: "markRead", notificationId }) }); }
+
+export async function resendVerification(email) {
+  const res = await fetch("/api/auth/verify", {
+    method: "POST", headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email })
+  });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.error);
+  return data;
+}
