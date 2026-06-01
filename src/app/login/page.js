@@ -1,5 +1,5 @@
 ﻿"use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { login, register } from "@/lib/api";
@@ -11,9 +11,31 @@ export default function LoginPage() {
   const [isSignUp, setIsSignUp] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [captchaA, setCaptchaA] = useState(0);
+  const [captchaB, setCaptchaB] = useState(0);
+  const [captchaAnswer, setCaptchaAnswer] = useState("");
+  const [captchaError, setCaptchaError] = useState("");
+
+    useEffect(() => { generateCaptcha(); }, [isSignUp]);
+
+  const generateCaptcha = () => {
+    setCaptchaA(Math.floor(Math.random() * 9) + 1);
+    setCaptchaB(Math.floor(Math.random() * 9) + 1);
+    setCaptchaAnswer("");
+    setCaptchaError("");
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (isSignUp) {
+      const sum = parseInt(captchaAnswer);
+      if (isNaN(sum) || sum !== captchaA + captchaB) {
+        setCaptchaError("验证码错误，请重新输入");
+        generateCaptcha();
+        setLoading(false);
+        return;
+      }
+    }
     setLoading(true);
     setError("");
     try {
@@ -124,6 +146,33 @@ export default function LoginPage() {
               onBlur={e=>{e.target.style.borderColor="rgba(255,255,255,.1)";e.target.style.background="rgba(255,255,255,.06)"}}
             />
           </div>
+{isSignUp && (
+            <div>
+              <label style={{color:"rgba(250,246,240,.4)",fontSize:".78rem",display:"block",marginBottom:"4px"}}>
+                验证码：{captchaA} + {captchaB} = ?
+              </label>
+              <div style={{display:"flex",gap:"8px",alignItems:"center"}}>
+                <input
+                  type="number"
+                  placeholder="输入答案"
+                  value={captchaAnswer}
+                  onChange={e=>{setCaptchaAnswer(e.target.value);setCaptchaError("")}}
+                  style={{
+                    flex:1,padding:"14px 18px",borderRadius:"12px",
+                    border:"1.5px solid rgba(255,255,255,.1)",
+                    background:"rgba(255,255,255,.06)",color:"#faf6f0",
+                    fontSize:".93rem",fontFamily:"inherit",outline:"none",boxSizing:"border-box"
+                  }}
+                />
+                <button type="button" onClick={generateCaptcha}
+                  style={{padding:"10px 14px",borderRadius:"12px",border:"1px solid rgba(255,255,255,.1)",
+                    background:"rgba(255,255,255,.06)",color:"rgba(250,246,240,.5)",cursor:"pointer",fontSize:"1.1rem"}}
+                >🔄</button>
+              </div>
+              {captchaError && <p style={{color:"#e74c3c",fontSize:".78rem",marginTop:"4px"}}>{captchaError}</p>}
+            </div>
+          )}
+          <button
           <button
             type="submit"
             disabled={loading}
