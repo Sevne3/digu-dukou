@@ -8,19 +8,17 @@ let volume = 0.3;
 
 const PLAYLIST = [
   {
-    id: "green2blue",
-    name: "green to blue",
-    emoji: "🌊",
-    description: "slowed + reverbed",
-    url: "/audio/green-to-blue.mp3"
+    id: "snowfall",
+    name: "snowfall (Sped Up)",
+    emoji: "❄️",
+    description: "Øneheart — 网易云音乐",
+    url: "/api/audio?id=1950777012"
   }
 ];
 
-// Public API
 export function getAudioState() {
   return {
-    isPlaying,
-    initialized,
+    isPlaying, initialized,
     currentTrack: currentTrackIdx,
     currentTrackName: PLAYLIST[currentTrackIdx]?.name || "",
     currentTrackEmoji: PLAYLIST[currentTrackIdx]?.emoji || "",
@@ -83,10 +81,7 @@ export function startAudio(trackIndex) {
 }
 
 export function stopAudio() {
-  if (audioEl) {
-    audioEl.pause();
-    audioEl.currentTime = 0;
-  }
+  if (audioEl) { audioEl.pause(); audioEl.currentTime = 0; }
   isPlaying = false;
   notify();
 }
@@ -119,7 +114,6 @@ export function setVolume(v) {
   if (audioEl) audioEl.volume = volume;
 }
 
-// Notification sound
 export function playNotificationSound() {
   try {
     const ctx = new (window.AudioContext || window.webkitAudioContext)();
