@@ -392,6 +392,73 @@ body, .card, .pc, .input, .cm-item, .badge--ghost {
               color 0.5s ease-in-out,
               box-shadow 0.5s ease-in-out !important;
 }
+
+
+/* ===== 移动端深度适配 ===== */
+@media(max-width:480px) {
+  .container { padding: 0 16px; }
+  .hero__bg { opacity: 0.4; }
+  .h-nav-in { padding: 0 12px; }
+  .hl { font-size: 0.95rem; }
+  .h-links { gap: 6px; }
+  .h-links a { font-size: 0.82rem; padding: 6px 12px; }
+  .h-cta { padding: 6px 14px !important; font-size: 0.82rem !important; }
+  .hb { padding: 100px 0 40px; }
+  .ht { text-align: center; }
+  .h-badge { font-size: 0.75rem; padding: 4px 14px; margin-bottom: 20px; }
+  .hp { font-size: 0.9rem; margin: 16px 0 28px; }
+  .ha .btn { width: 100%; justify-content: center; font-size: 0.88rem; padding: 11px 20px; }
+  .hw svg { height: 50px; }
+
+  .sec { padding: 48px 0; }
+  .st { font-size: 1.3rem; margin-bottom: 28px; }
+  .ss { font-size: 0.85rem; margin: -20px 0 28px; }
+
+  .ac { padding: 28px 20px 24px; }
+  .ai { font-size: 2rem; margin-bottom: 12px; }
+  .ac-title { font-size: 1rem !important; }
+  .ac-desc { font-size: 0.85rem !important; }
+
+  .wi { padding: 18px; gap: 14px; }
+  .we { font-size: 1.4rem; }
+  .wi-title { font-size: 0.92rem !important; }
+  .wi-desc { font-size: 0.83rem !important; }
+
+  .ft { padding: 24px 20px; }
+  .fi { width: 48px; height: 48px; font-size: 1.4rem; margin-bottom: 12px; }
+  .ft-title { font-size: 1rem !important; }
+  .ft-desc { font-size: 0.83rem !important; }
+
+  .jc { padding: 28px 20px; }
+  .jt { font-size: 1.2rem; }
+  .jd { font-size: 0.85rem; }
+  .ji { padding: 12px 14px; font-size: 0.88rem; }
+  .btn--block { padding: 12px; font-size: 0.9rem; }
+  .jn { font-size: 0.72rem; }
+
+  .bn { padding: 40px 0; }
+  .bnt { font-size: 1.2rem; }
+  .bns { font-size: 0.85rem; letter-spacing: 4px; }
+
+  .ftr { padding: 24px 0; }
+  .fti { flex-direction: column; text-align: center; gap: 8px; }
+  .ftc { font-size: 0.78rem; }
+
+  .fl { gap: 12px; }
+  .cv { padding: 28px 20px; }
+  .cv blockquote { font-size: 0.9rem; }
+  .cv cite { font-size: 0.78rem; }
+
+  .wn { padding: 16px; }
+  .wn-text { font-size: 0.85rem !important; }
+}
+
+/* 登录页移动端适配 */
+@media(max-width:480px) {
+  .auth-page { padding: 20px 16px !important; }
+  .auth-card { padding: 32px 24px !important; }
+}
+
 @media (prefers-reduced-motion: reduce) {
   body, .card, .pc, .input, .cm-item, .badge--ghost { transition-duration: 0s !important; }
   .page-wrap { animation: none !important; }
