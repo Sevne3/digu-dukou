@@ -31,6 +31,22 @@ function makeVerificationToken() {
   return Math.random().toString(36).slice(2, 15) + Math.random().toString(36).slice(2, 15);
 }
 
+function buildWelcomeEmail(link) {
+  return [
+    '<div style="max-width:480px;margin:40px auto;padding:32px;background:#faf6f0;border-radius:20px;font-family:sans-serif">',
+    '<h1 style="font-size:1.4rem;color:#1a1a2e;margin-bottom:24px">🌿 欢迎来到低谷渡口</h1>',
+    '<p style="color:#5d4e37;line-height:1.8;font-size:0.95rem">你收到这封邮件，是因为有人在低谷渡口注册了账号。</p>',
+    '<p style="color:#5d4e37;line-height:1.8;font-size:0.95rem">点击下方按钮验证你的邮箱：</p>',
+    '<div style="text-align:center;margin:32px 0">',
+    '<a href="' + link + '" style="display:inline-block;padding:14px 36px;background:linear-gradient(135deg,#f0c27f,#dba76a);color:#1a1a2e;text-decoration:none;border-radius:40px;font-weight:600;font-size:0.95rem">验证邮箱</a>',
+    "</div>",
+    '<p style="color:#8a7a6e;font-size:0.82rem;line-height:1.6">如果这不是你操作的，请忽略这封邮件。<br/>链接有效期 24 小时。</p>',
+    '<p style="color:#b8aaa0;font-size:0.78rem;margin-top:24px;text-align:center">低谷渡口 — 你不是一个人</p>',
+    "</div>"
+  ].join("
+");
+}
+
 async function sendVerificationEmail(email, token) {
   if (!RESEND_KEY) return;
   const link = BASE_URL + "/verify-email?token=" + token + "&email=" + encodeURIComponent(email);
@@ -42,14 +58,7 @@ async function sendVerificationEmail(email, token) {
         from: "低谷渡口 <onboarding@resend.dev>",
         to: email,
         subject: "🌿 验证你的邮箱 — 低谷渡口",
-        html: "<div style="max-width:480px;margin:40px auto;padding:32px;background:#faf6f0;border-radius:20px;font-family:sans-serif">"
-          + "<h1 style="font-size:1.4rem;color:#1a1a2e;margin-bottom:24px">🌿 欢迎来到低谷渡口</h1>"
-          + "<p style="color:#5d4e37;line-height:1.8;font-size:0.95rem">你收到这封邮件，是因为有人在低谷渡口注册了账号。</p>"
-          + "<p style="color:#5d4e37;line-height:1.8;font-size:0.95rem">点击下方按钮验证你的邮箱：</p>"
-          + "<div style="text-align:center;margin:32px 0"><a href="" + link + "" style="display:inline-block;padding:14px 36px;background:linear-gradient(135deg,#f0c27f,#dba76a);color:#1a1a2e;text-decoration:none;border-radius:40px;font-weight:600;font-size:0.95rem">验证邮箱</a></div>"
-          + "<p style="color:#8a7a6e;font-size:0.82rem;line-height:1.6">如果这不是你操作的，请忽略这封邮件。<br/>链接有效期 24 小时。</p>"
-          + "<p style="color:#b8aaa0;font-size:0.78rem;margin-top:24px;text-align:center">低谷渡口 — 你不是一个人</p>"
-          + "</div>"
+        html: buildWelcomeEmail(link)
       })
     });
   } catch(e) {
@@ -77,7 +86,6 @@ export async function POST(req) {
     });
     saveDb(db);
 
-    // Send verification email (async, don"t wait)
     sendVerificationEmail(email, verificationToken);
 
     const token = await createToken(id);

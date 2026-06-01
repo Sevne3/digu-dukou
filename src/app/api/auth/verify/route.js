@@ -30,6 +30,21 @@ export async function GET(req) {
   }
 }
 
+function buildVerifyEmail(link) {
+  return [
+    '<div style="max-width:480px;margin:40px auto;padding:32px;background:#faf6f0;border-radius:20px;font-family:sans-serif">',
+    '<h1 style="font-size:1.4rem;color:#1a1a2e;margin-bottom:24px">🌿 重新验证邮箱</h1>',
+    '<p style="color:#5d4e37;line-height:1.8;font-size:0.95rem">点击下方按钮验证你的邮箱：</p>',
+    '<div style="text-align:center;margin:32px 0">',
+    '<a href="' + link + '" style="display:inline-block;padding:14px 36px;background:linear-gradient(135deg,#f0c27f,#dba76a);color:#1a1a2e;text-decoration:none;border-radius:40px;font-weight:600;font-size:0.95rem">验证邮箱</a>',
+    "</div>",
+    '<p style="color:#8a7a6e;font-size:0.82rem;line-height:1.6">链接有效期 24 小时。</p>',
+    '<p style="color:#b8aaa0;font-size:0.78rem;margin-top:24px;text-align:center">低谷渡口 — 你不是一个人</p>',
+    "</div>"
+  ].join("
+");
+}
+
 export async function POST(req) {
   try {
     const { email } = await req.json();
@@ -40,12 +55,10 @@ export async function POST(req) {
     if (!user) return Response.json({ error: "用户不存在" }, { status: 404 });
     if (user.emailVerified) return Response.json({ error: "邮箱已验证" }, { status: 400 });
 
-    // Generate new token
     const token = Math.random().toString(36).slice(2, 15) + Math.random().toString(36).slice(2, 15);
     user.verificationToken = token;
     saveDb(db);
 
-    // Send email
     if (RESEND_KEY) {
       const link = BASE_URL + "/verify-email?token=" + token + "&email=" + encodeURIComponent(email);
       await fetch("https://api.resend.com/emails", {
@@ -55,12 +68,7 @@ export async function POST(req) {
           from: "低谷渡口 <onboarding@resend.dev>",
           to: email,
           subject: "🌿 重新验证你的邮箱 — 低谷渡口",
-          html: "<div style="max-width:480px;margin:40px auto;padding:32px;background:#faf6f0;border-radius:20px;font-family:sans-serif">"
-            + "<h1 style="font-size:1.4rem;color:#1a1a2e;margin-bottom:24px">🌿 重新验证邮箱</h1>"
-            + "<p style="color:#5d4e37;line-height:1.8;font-size:0.95rem">点击下方按钮验证你的邮箱：</p>"
-            + "<div style="text-align:center;margin:32px 0"><a href="" + link + "" style="display:inline-block;padding:14px 36px;background:linear-gradient(135deg,#f0c27f,#dba76a);color:#1a1a2e;text-decoration:none;border-radius:40px;font-weight:600;font-size:0.95rem">验证邮箱</a></div>"
-            + "<p style="color:#8a7a6e;font-size:0.82rem;line-height:1.6">链接有效期 24 小时。</p>"
-            + "</div>"
+          html: buildVerifyEmail(link)
         })
       });
     }
