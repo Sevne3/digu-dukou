@@ -43,8 +43,7 @@ function buildWelcomeEmail(link) {
     '<p style="color:#8a7a6e;font-size:0.82rem;line-height:1.6">如果这不是你操作的，请忽略这封邮件。<br/>链接有效期 24 小时。</p>',
     '<p style="color:#b8aaa0;font-size:0.78rem;margin-top:24px;text-align:center">低谷渡口 — 你不是一个人</p>',
     "</div>"
-  ].join("
-");
+  ].join("\n");
 }
 
 async function sendVerificationEmail(email, token) {
