@@ -41,8 +41,7 @@ function buildVerifyEmail(link) {
     '<p style="color:#8a7a6e;font-size:0.82rem;line-height:1.6">链接有效期 24 小时。</p>',
     '<p style="color:#b8aaa0;font-size:0.78rem;margin-top:24px;text-align:center">低谷渡口 — 你不是一个人</p>',
     "</div>"
-  ].join("
-");
+  ].join("\n");
 }
 
 export async function POST(req) {
