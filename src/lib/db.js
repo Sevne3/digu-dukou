@@ -6,7 +6,18 @@ function getDb() {
   const dir = path.dirname(DB_PATH);
   if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
   if (!fs.existsSync(DB_PATH)) {
-    fs.writeFileSync(DB_PATH, JSON.stringify({ users: [], checkIns: [], posts: [], comments: [], treeholes: [], reactions: [], skills: [], timeCapsules: [], messages: [], shownEncouragements: [], pairs: [], userLocations: [], notifications: [] }), "utf8");
+    // Try to copy seed data
+    const seed = path.join(process.cwd(), "data", "database.json");
+    if (fs.existsSync(seed)) {
+      fs.copyFileSync(seed, DB_PATH);
+    } else {
+      fs.writeFileSync(DB_PATH, JSON.stringify({
+        users: [], checkIns: [], posts: [], comments: [],
+        treeholes: [], reactions: [], skills: [], timeCapsules: [],
+        messages: [], shownEncouragements: [], pairs: [],
+        userLocations: [], notifications: []
+      }), "utf8");
+    }
   }
   return JSON.parse(fs.readFileSync(DB_PATH, "utf8"));
 }
