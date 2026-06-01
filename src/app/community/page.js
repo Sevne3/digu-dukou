@@ -139,6 +139,10 @@ export default function CommunityPage() {
                 <label style={{display:"flex",alignItems:"center",gap:"6px",fontSize:".88rem",color:"var(--text-light)",cursor:"pointer"}}>
                   <input type="checkbox" checked={anonymous} onChange={e=>setAnonymous(e.target.checked)} style={{accentColor:"var(--warm-glow)"}} /> 匿名发布
                 </label>
+                <label style={{padding:"8px 14px",borderRadius:"10px",border:"1.5px dashed #ddd",textAlign:"center",cursor:"pointer",fontSize:".82rem",color:"var(--text-muted)",transition:"all .2s",whiteSpace:"nowrap"}} onMouseEnter={e=>e.currentTarget.style.borderColor="var(--warm-glow)"} onMouseLeave={e=>e.currentTarget.style.borderColor="#ddd"}>
+                  <input type="file" accept="image/*" multiple onChange={handleImageUpload} style={{display:"none"}} />
+                  📷 图片
+                </label>
                 <button type="submit" className="btn btn--primary btn--sm" disabled={submitting} style={{marginLeft:"auto"}}>{submitting ? "发布中..." : "发布"}</button>
               </div>
             </form>
