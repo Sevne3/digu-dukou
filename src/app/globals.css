@@ -459,6 +459,23 @@ body, .card, .pc, .input, .cm-item, .badge--ghost {
   .auth-card { padding: 32px 24px !important; }
 }
 
+
+/* ===== Dark mode fix: post content and comments ===== */
+[data-theme="night"] .pc-c,
+[data-theme="night"] .cm-text {
+  color: rgba(250,246,240,.85) !important;
+}
+[data-theme="night"] .cm-author {
+  color: var(--warm-glow) !important;
+}
+[data-theme="night"] .cm-item {
+  background: rgba(255,255,255,.06) !important;
+  border-color: rgba(255,255,255,.08) !important;
+}
+[data-theme="night"] .cm-box {
+  border-top-color: rgba(255,255,255,.08) !important;
+}
+
 @media (prefers-reduced-motion: reduce) {
   body, .card, .pc, .input, .cm-item, .badge--ghost { transition-duration: 0s !important; }
   .page-wrap { animation: none !important; }
